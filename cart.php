@@ -1,4 +1,5 @@
 <!-- ここから -->
+<?php session_start(); ?>
 <!-- ここまで -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -15,9 +16,24 @@
 	</div>
 	<div class="container padding-y-20">
 		<!-- ここから -->
+		<?php
+		// 商品情報
+		$names = [ "Tシャツ", "靴下", "帽子" ];
+		$prices = [ 3000, 500, 1500 ];
+
+		if ( isset( $_SESSION["cart"] ) == true && isset( $_POST["id"] ) == true ) {
+			$_SESSION["cart"][] = $_POST["id"];
+		} elseif ( isset( $_POST["id"] ) == true ) {
+			$_SESSION["cart"] = [ $_POST["id"] ];
+		}		
+		// 合計金額
+		$sum = 0;
+		?>
 		<!-- ここまで -->
+
 		<h2>カートの一覧</h2>
 		<!-- ここから -->
+		<?php if ( isset( $_SESSION["cart"] ) == true && empty( $_SESSION["cart"] ) == false ) { ?>
 		<!-- ここまで -->
 		<table class="table">
 			<thead>
@@ -28,10 +44,25 @@
 			</thead>
 			<tbody>
 				<!-- ここから -->
+				<?php 
+				foreach ( $_SESSION["cart"] as $id ) { 
+				?>
+					<tr>
+						<td><?php echo $names[ $id ] ?></td>
+						<td><?php echo $prices[ $id ] ?>円</td>
+					</tr>
+				<?php
+					$sum = $sum + $prices[ $id ];
+				} 
+				?>
 				<!-- ここまで -->
 			</tbody>
 		</table>
 		<!-- ここから -->
+		<h2>合計金額：<?php echo $sum; ?>円</h2>
+		<?php } else { ?>
+		カートに商品がありません。
+		<?php } ?>
 		<!-- ここまで -->
 		<a href="shop.php" class="btn">商品一覧に戻る</a>
 	</div>
